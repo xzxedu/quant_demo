@@ -1,0 +1,8 @@
+#测试环境下
+DEBUG = True
+# 数据库配置
+SQLALCHEMY_ECHO = True
+SQLALCHEMY_DATABASE_URI = 'mysql://root:wechatdemo123@127.0.0.1/quant_db'
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+SQLALCHEMY_ENCODING = "utf-8"
+
