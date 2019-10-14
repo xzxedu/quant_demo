@@ -39,7 +39,7 @@ class PayService():
         yun_price = decimal.Decimal(yun_price)
         total_price = pay_price + yun_price
         try:
-            # 为了防止并发库存出问题了，我们坐下selectfor update, 这里可以给大家演示下
+            # 为了防止并发库存出问题了，select for update
             tmp_quant_list = db.session.query(Quant).filter(Quant.id.in_(quant_ids)) \
                 .with_for_update().all()
 

@@ -8,6 +8,7 @@ App({
         shopName: "quant demo",
         domain:"http://192.168.1.105:8999/api"
     },
+    // domain:"https://xzx.faithforfuture.com/api"
     tip:function( params ){
         var that = this;
         var title = params.hasOwnProperty('title')?params['title']:'提示信息';

@@ -99,7 +99,7 @@ def orderPay():
     oauth_bind_info = OauthMemberBind.query.filter_by(member_id=member_info.id).first()
     if not oauth_bind_info:
         resp['code'] = -1
-        resp['msg'] = "系统繁忙。请稍后再试~~"
+        resp['msg'] = "系统繁忙。请稍后再试"
         return jsonify(resp)
 
     config_mina = app.config['MINA_APP']
@@ -121,9 +121,6 @@ def orderPay():
 
     pay_info = target_wechat.get_pay_info(pay_data=data)
 
-    ## Suppose a fake prepay_id which returns from wechat platform
-    pay_info['prepay_id'] = 'wx2017033010242291fcfe0db70013231072'
-
     #保存prepay_id为了后面发模板消息
     pay_order_info.prepay_id = pay_info['prepay_id']
     db.session.add(pay_order_info)
@@ -132,46 +129,64 @@ def orderPay():
     resp['data']['pay_info'] = pay_info
     return jsonify(resp)
 
+# @route_api.route("/order/callback", methods=["POST"])
+# def orderCallback():
+#         result_data = {
+#             'return_code': 'SUCCESS',
+#             'return_msg': 'OK'
+#         }
+#         header = {'Content-Type': 'application/xml'}
+#         config_mina = app.config['MINA_APP']
+#         target_wechat = WeChatService(merchant_key=config_mina['paykey'])
+#         callback_data = target_wechat.xml_to_dict(request.data)
+#         #app.logger.info(callback_data)
+#         sign = callback_data['sign']
+#         callback_data.pop('sign')
+#         gene_sign = target_wechat.create_sign(callback_data)
+#         app.logger.info(gene_sign)
+#         if sign != gene_sign:
+#             result_data['return_code'] = result_data['return_msg'] = 'FAIL'
+#             return target_wechat.dict_to_xml(result_data), header
+#         if callback_data['result_code'] != 'SUCCESS':
+#             result_data['return_code'] = result_data['return_msg'] = 'FAIL'
+#             return target_wechat.dict_to_xml(result_data), header
+#
+#         order_sn = callback_data['out_trade_no']
+#         pay_order_info = PayOrder.query.filter_by(order_sn=order_sn).first()
+#         if not pay_order_info:
+#             result_data['return_code'] = result_data['return_msg'] = 'FAIL'
+#             return target_wechat.dict_to_xml(result_data), header
+#
+#         if int(pay_order_info.total_price * 100) != int(callback_data['total_fee']):
+#             result_data['return_code'] = result_data['return_msg'] = 'FAIL'
+#             return target_wechat.dict_to_xml(result_data), header
+#
+#         if pay_order_info.status == 1:
+#             return target_wechat.dict_to_xml(result_data), header
+#
+#         target_pay = PayService()
+#         target_pay.orderSuccess(pay_order_id=pay_order_info.id, params={"pay_sn": callback_data['transaction_id']})
+#         # 将微信回掉结果放入记录表
+#         target_pay.addPayCallbackData(pay_order_id=pay_order_info.id, data=request.data)
+#         return target_wechat.dict_to_xml(result_data), header
+
 @route_api.route("/order/callback", methods=["POST"])
 def orderCallback():
-        result_data = {
-            'return_code': 'SUCCESS',
-            'return_msg': 'OK'
-        }
-        header = {'Content-Type': 'application/xml'}
-        config_mina = app.config['MINA_APP']
-        target_wechat = WeChatService(merchant_key=config_mina['paykey'])
-        callback_data = target_wechat.xml_to_dict(request.data)
-        #app.logger.info(callback_data)
-        sign = callback_data['sign']
-        callback_data.pop('sign')
-        gene_sign = target_wechat.create_sign(callback_data)
-        app.logger.info(gene_sign)
-        if sign != gene_sign:
-            result_data['return_code'] = result_data['return_msg'] = 'FAIL'
-            return target_wechat.dict_to_xml(result_data), header
-        if callback_data['result_code'] != 'SUCCESS':
-            result_data['return_code'] = result_data['return_msg'] = 'FAIL'
-            return target_wechat.dict_to_xml(result_data), header
+    """模拟支付"""
+    resp = {'code': 0, 'msg': '支付成功', 'data': {}}
+    req = request.values
+    order_sn = req['order_sn']
+    pay_order_info = PayOrder.query.filter_by(order_sn=order_sn).first()
+    #模拟第三方支付流水信息，pay_sn
+    transaction_id = "1004400740201409030005092168"
+    target_pay = PayService()
+    order_suc = target_pay.orderSuccess(pay_order_id=pay_order_info.id, params={"pay_sn": transaction_id})
+    # 将微信回掉结果放入记录表
+    callback = target_pay.addPayCallbackData(pay_order_id=pay_order_info.id, data=pay_order_info)
+    if order_suc and callback:
+        resp['code'] = 200
 
-        order_sn = callback_data['out_trade_no']
-        pay_order_info = PayOrder.query.filter_by(order_sn=order_sn).first()
-        if not pay_order_info:
-            result_data['return_code'] = result_data['return_msg'] = 'FAIL'
-            return target_wechat.dict_to_xml(result_data), header
-
-        if int(pay_order_info.total_price * 100) != int(callback_data['total_fee']):
-            result_data['return_code'] = result_data['return_msg'] = 'FAIL'
-            return target_wechat.dict_to_xml(result_data), header
-
-        if pay_order_info.status == 1:
-            return target_wechat.dict_to_xml(result_data), header
-
-        target_pay = PayService()
-        target_pay.orderSuccess(pay_order_id=pay_order_info.id, params={"pay_sn": callback_data['transaction_id']})
-        # 将微信回掉结果放入记录表
-        target_pay.addPayCallbackData(pay_order_id=pay_order_info.id, data=request.data)
-        return target_wechat.dict_to_xml(result_data), header
+    return jsonify(resp)
 
 
 @route_api.route("/order/ops", methods=["POST"])

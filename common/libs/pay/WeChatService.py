@@ -6,7 +6,7 @@ import hashlib, requests, uuid, json, datetime
 from common.models.pay.OauthAccessToken import OauthAccessToken
 
 class WeChatService():
-    def __init__(self, merchant_key = None):
+    def __init__(self, merchant_key=None):
         self.merchant_key = merchant_key
 
     def create_sign(self, pay_data):
@@ -20,35 +20,57 @@ class WeChatService():
         sign = hashlib.md5(stringSignTemp.encode("utf-8")).hexdigest()
         return sign.upper()
 
+    # def get_pay_info(self, pay_data=None):
+    #     """
+    #     获取支付信息
+    #     """
+    #     sign = self.create_sign(pay_data)
+    #     pay_data['sign'] = sign
+    #     xml_data = self.dict_to_xml(pay_data)
+    #     headers = {
+    #         'Content-Type': 'application/xml'
+    #     }
+    #     url = "https://api.mch.weixin.qq.com/pay/unifiedorder"
+    #     r = requests.post(url=url, data=xml_data.encode("utf-8"), headers=headers)
+    #     r.encoding = "utf-8"
+    #     if r.status_code == 200:
+    #         prepay_id = self.xml_to_dict(r.text).get("prepay_id")
+    #         pay_sign_data = {
+    #             'appId': pay_data.get('appid'),
+    #             'timeStamp': pay_data.get('out_trade_no'),
+    #             'nonceStr': pay_data.get('nonce_str'),
+    #             'package': 'prepay_id={0}'.format(prepay_id),
+    #             'signType': ' MD5'
+    #         }
+    #         pay_sign = self.create_sign(pay_sign_data)
+    #         pay_sign_data.pop('appId')
+    #         pay_sign_data['paySign'] = pay_sign
+    #         pay_sign_data['prepay_id'] = prepay_id
+    #
+    #         return pay_sign_data
+    #     return False
+
     def get_pay_info(self, pay_data=None):
         """
-        获取支付信息
+        缺少mchID，模拟获取支付信息
         """
         sign = self.create_sign(pay_data)
         pay_data['sign'] = sign
-        xml_data = self.dict_to_xml(pay_data)
-        headers = {
-            'Content-Type': 'application/xml'
+        prepay_id = 'wx12220608745169b44b8f43db0304588791'
+        pay_sign_data = {
+            'appId': pay_data.get('appid'),
+            'timeStamp': pay_data.get('out_trade_no'),
+            'nonceStr': pay_data.get('nonce_str'),
+            'package': 'prepay_id=wx12220608745169b44b8f43db0304588791',
+            'signType': ' MD5'
         }
-        url = "https://api.mch.weixin.qq.com/pay/unifiedorder"
-        r = requests.post(url=url, data=xml_data.encode("utf-8"), headers=headers)
-        r.encoding = "utf-8"
-        if r.status_code == 200:
-            prepay_id = self.xml_to_dict(r.text).get("prepay_id")
-            pay_sign_data = {
-                'appId': pay_data.get('appid'),
-                'timeStamp': pay_data.get('out_trade_no'),
-                'nonceStr': pay_data.get('nonce_str'),
-                'package': 'prepay_id={0}'.format(prepay_id),
-                'signType': ' MD5'
-            }
-            pay_sign = self.create_sign(pay_sign_data)
-            pay_sign_data.pop('appId')
-            pay_sign_data['paySign'] = pay_sign
-            pay_sign_data['prepay_id'] = prepay_id
+        pay_sign = self.create_sign(pay_sign_data)
+        pay_sign_data.pop('appId')
+        pay_sign_data['paySign'] = pay_sign
+        pay_sign_data['prepay_id'] = prepay_id
 
-            return pay_sign_data
-        return False
+        return pay_sign_data
+        #return False
 
     def dict_to_xml(self, dict_data):
         """

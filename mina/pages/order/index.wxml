@@ -28,9 +28,9 @@
      </view>
      <view class="peisong-way">
         <view class="row-box">
-            <view class="row-label">配送方式</view>
-            <view class="right-text" wx:if="{{yun_price > 0}}">快递</view>
-            <view class="right-text" wx:if="{{yun_price == 0}}">包邮</view>
+            <view class="row-label">产品收据形式</view>
+            <view class="right-text" wx:if="{{yun_price > 0}}">纸质版投递</view>
+            <view class="right-text" wx:if="{{yun_price == 0}}">电子版</view>
         </view>
         <view class="row-box">
             <view class="row-label">备注</view>
@@ -42,11 +42,11 @@
 
      <view class="goods-info">
         <view class="row-box">
-            <view class="row-label">商品金额</view>
+            <view class="row-label">产品金额</view>
             <view class="right-text">¥ {{pay_price}}</view>
         </view>
         <view class="row-box">
-            <view class="row-label">运费</view>
+            <view class="row-label">额外费用</view>
             <view class="right-text">+ ¥ {{yun_price}}</view>
         </view>
      </view>

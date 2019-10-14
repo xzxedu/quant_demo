@@ -2,7 +2,7 @@ var app = getApp();
 Page({
     data: {
         order_list:[],
-        statusType: ["待付款", "待发货", "待确认", "待评价", "已完成","已关闭"],
+        statusType: ["待付款", "待生成", "待确认", "待评价", "已完成","已关闭"],
         status:[ "-8","-7","-6","-5","1","0" ],
         currentType: 0,
         tabClass: ["", "", "", "", "", ""]
@@ -42,13 +42,46 @@ Page({
                     app.alert({"content": resp.msg});
                     return;
                 }
-
                 that.setData({
                    order_list:resp.data.pay_order_list
                 });
             }
         });
     },
+
+    // toPay:function( e ){
+    //     var that = this;
+    //     wx.request({
+    //         url: app.buildUrl("/order/pay"),
+    //         header: app.getRequestHeader(),
+    //         method: 'POST',
+    //         data: {
+    //             order_sn: e.currentTarget.dataset.id
+    //         },
+    //         success: function (res) {
+    //             var resp = res.data;
+    //             if (resp.code != 200) {
+    //                 app.alert({"content": resp.msg});
+    //                 return;
+    //             }
+    //             var pay_info = resp.data.pay_info;
+    //             wx.requestPayment({
+    //                 'timeStamp': pay_info.timeStamp,
+    //                 'nonceStr': pay_info.nonceStr,
+    //                 'package': pay_info.package,
+    //                 'signType': 'MD5',
+    //                 'paySign': pay_info.paySign,
+    //                 'success': function (res) {
+    //                 },
+    //                 'fail': function (res) {
+    //                     app.alert({"content": "假设支付成功"})
+    //                 }
+    //             });
+    //         }
+    //     });
+    // },
+
+    //模拟支付
     toPay:function( e ){
         var that = this;
         wx.request({
@@ -65,23 +98,30 @@ Page({
                     return;
                 }
                 var pay_info = resp.data.pay_info;
-                wx.requestPayment({
-                    'timeStamp': pay_info.timeStamp,
-                    'nonceStr': pay_info.nonceStr,
-                    'package': pay_info.package,
-                    'signType': 'MD5',
-                    'paySign': pay_info.paySign,
-                    'success': function (res) {
+                wx.request({
+                    url: app.buildUrl("/order/callback"),
+                    header: app.getRequestHeader(),
+                    method: 'POST',
+                    data: {
+                        pay_info: pay_info,
+                        order_sn: e.currentTarget.dataset.id
                     },
-                    'fail': function (res) {
+                    success: function (res) {
+                        var resp = res.data;
+                        if (resp.code == 200) {
+                            app.alert({"content": resp.msg});
+                            that.getPayOrder();
+                        }
                     }
                 });
             }
         });
     },
+
     orderConfirm:function( e ){
         this.orderOps( e.currentTarget.dataset.id, "confirm", "are you sure you have received it？" );
     },
+
     orderComment:function( e ){
         wx.navigateTo({
             url: "/pages/my/comment?order_sn=" + e.currentTarget.dataset.id

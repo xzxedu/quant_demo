@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from application import app, db
+from common.models.quant.Quant import Quant
 from common.libs.UrlManager import UrlManager
 from common.models.member.Member import Member
 from flask import Blueprint, request, redirect, jsonify
-from common.libs.Helper import ops_render, iPagination,getCurrentDate
+from common.models.member.MemberComments import MemberComments
+from common.libs.Helper import getDictFilterField, selectFilterObj
+from common.libs.Helper import ops_render, iPagination, getCurrentDate
 
 route_member = Blueprint('member_page', __name__)
 
@@ -99,7 +102,56 @@ def set():
 
 @route_member.route( "/comment" )
 def comment():
-    return ops_render("member/comment.html" )
+    resp_data = {}
+    req = request.args
+    page = int(req['p']) if ('p' in req and req['p']) else 1
+    query = MemberComments.query
+
+    page_params = {
+        'total': query.count(),
+        'page_size': app.config['PAGE_SIZE'],
+        'page': page,
+        'display': app.config['PAGE_DISPLAY'],
+        'url': request.full_path.replace("&p={}".format(page), "")
+    }
+
+    pages = iPagination(page_params)
+    offset = (page - 1) * app.config['PAGE_SIZE']
+
+    comment_list = query.order_by(MemberComments.id.desc()).offset( offset ).limit( app.config['PAGE_SIZE'] ).all()
+    data_list = []
+    if comment_list:
+        member_map = getDictFilterField(Member, Member.id, "id", selectFilterObj( comment_list ,"member_id" ) )
+        quant_ids = []
+        for item in comment_list:
+            tmp_quant_ids = (item.quant_ids[1:-1]).split("_")
+            tmp_quant_ids = {}.fromkeys(tmp_quant_ids).keys()
+            quant_ids = quant_ids + list(tmp_quant_ids)
+
+        quant_map = getDictFilterField(Quant, Quant.id,"id", quant_ids )
+
+        for item in comment_list:
+            tmp_member_info = member_map[item.member_id]
+            tmp_quants = []
+            tmp_quant_ids = (item.quant_ids[1:-1]).split("_")
+            for tmp_quant_id in tmp_quant_ids:
+                tmp_quant_info = quant_map[int(tmp_quant_id)]
+                tmp_quants.append({
+                    'name': tmp_quant_info.name,
+                })
+
+            tmp_data = {
+                "content": item.content,
+                "score": item.score,
+                "member_info": tmp_member_info,
+                "quants": tmp_quants
+            }
+            data_list.append(tmp_data)
+    resp_data['list'] = data_list
+    resp_data['pages'] = pages
+    resp_data['current'] = 'comment'
+
+    return ops_render("member/comment.html", resp_data)
 
 @route_member.route("/ops", methods=["POST"])
 def ops():

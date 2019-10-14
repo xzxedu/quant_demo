@@ -33,8 +33,8 @@ STATUS_MAPPING = {
 MINA_APP = {
     'appid': 'wx76aec7d8d5f5083f',
     'appkey': 'de369b1d7fcb9d07cecb30a7ea30fbf1',
-    'paykey': 'wx76aec7d8d5f5083f',
-    'mch_id': 'wx76aec7d8d5f5083f',
+    'paykey': 'wx76aec7d8d5f5083f',  # fake
+    'mch_id': '1443337302',  #fake
     'callback_url': '/api/order/callback'
 }
 
