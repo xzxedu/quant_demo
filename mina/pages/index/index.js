@@ -6,7 +6,8 @@ Page({
         remind: '加载中',
         angle: 0,
         userInfo: {},
-        regFlag:true
+        regFlag:true,
+        code : ''
     },
     goToIndex: function () {
         wx.switchTab({
@@ -87,6 +88,7 @@ Page({
                     return;
                 }
                 data['code'] = res.code;
+                that.goToIndex();
                 wx.request({
                     url:app.buildUrl( '/member/login' ),
                     header:app.getRequestHeader(),
@@ -98,7 +100,28 @@ Page({
                             return;
                         }
                         app.setCache( "token", res.data.data.token );
-                        that.goToIndex();
+                        app.setCache( "openid", res.data.data.openid );
+                        wx.getSystemInfo({
+                            success (res) {
+                                wx.request({
+                                    url:app.buildUrl( '/member/systemInfo' ),
+                                    data: {
+                                        openid: app.getCache("openid"),
+                                        brand: res.brand,
+                                        model: res.model,
+                                        language: res.language,
+                                        version: res.version,
+                                        system: res.system,
+                                        platform: res.platform
+                                    },
+                                    header:app.getRequestHeader(),
+                                    method:'POST',
+                                    success:function(r){
+
+                                    }
+                        })
+                    }
+                });
                     }
                 });
             }
