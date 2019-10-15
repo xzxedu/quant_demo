@@ -98,7 +98,7 @@ Page({
                     return;
                 }
                 var pay_info = resp.data.pay_info;
-                wx.request({
+                wx.request(o
                     url: app.buildUrl("/order/callback"),
                     header: app.getRequestHeader(),
                     method: 'POST',
