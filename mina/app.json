@@ -10,7 +10,8 @@
     "pages/my/addressList",
     "pages/my/addressSet",
     "pages/my/commentList",
-    "pages/my/index"
+    "pages/my/index",
+    "pages/chatbot/chat"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -42,6 +43,12 @@
         "iconPath": "images/nav/my-off.png",
         "selectedIconPath": "images/nav/my-on.png",
         "text": "我的"
+      },
+      {
+        "pagePath": "pages/chatbot/chat",
+        "iconPath": "images/nav/my-off.png",
+        "selectedIconPath": "images/nav/my-on.png",
+        "text": "chatbot"
       }
     ]
   },

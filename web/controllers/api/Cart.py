@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 from common.libs.Helper import selectFilterObj, getDictFilterField
+from common.models.member.UserBuyHistory import UserBuyHistory
 from common.libs.member.CartService import CartService
 from common.models.member.MemberCart import MemberCart
+from common.libs.Helper import getCurrentDate
 from common.libs.UrlManager import UrlManager
 from common.models.quant.Quant import Quant
 from web.controllers.api import route_api
-from application import app
 from flask import request, jsonify, g
-import json, decimal
+from application import db
+import json
 
 @route_api.route("/cart/index")
 def cartIndex():
@@ -39,7 +41,6 @@ def cartIndex():
 
 @route_api.route("/cart/set", methods=["POST"])
 def setCart():
-    app.logger.info('aaaaaaaaaa')
     resp = {'code': 200, 'msg': '操作成功', 'data': {}}
     req = request.values
     quant_id = int(req['id']) if 'id' in req else 0
@@ -72,6 +73,20 @@ def setCart():
         resp['code'] = -1
         resp['msg'] = "添加到购物车失败-4"
         return jsonify(resp)
+    """
+    添加到用户的购物记录（临时模拟，其实应该是在确认收获后添加）
+    """
+    history_model = UserBuyHistory()
+    history_model.openid = req['openid']
+    history_model.nickname = member_info.nickname
+    history_model.cat_id = quant_info.cat_id
+    history_model.product = quant_info.name
+    history_model.price = str(quant_info.price)
+    history_model.buy_count = number
+    history_model.updated_time = getCurrentDate()
+
+    db.session.add(history_model)
+    db.session.commit()
 
     return jsonify(resp)
 

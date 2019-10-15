@@ -15,11 +15,11 @@
          <!-- <image class="smalltitle" src="/images/more/confirm-word1.png"></image> -->
 
         <view class="confirm-btn" bindtap='goToIndex' wx:if="{{regFlag==true}}">
-          <text>点击进入</text>
+          <text>click to entry</text>
         </view>
 
         <button class="confirm-btn"  open-type="getUserInfo" bindgetuserinfo="login" wx:if="{{regFlag==false}}">
-            授权登录
+            Authorized login
         </button>
 
         <text class="copyright">@xzx </text>

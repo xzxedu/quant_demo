@@ -46,7 +46,7 @@ def orderInfo():
             data_quant_list.append(tmp_data)
 
     default_address = {
-        "name": "lallaal",
+        "name": "xzx",
         "mobile": "1234567",
         "address": "xx市xx区xx",
     }

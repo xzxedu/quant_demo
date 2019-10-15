@@ -201,7 +201,8 @@ Page({
         var that = this;
         var data = {
             "id": quant_id,
-            "number": number
+            "number": number,
+            "openid": app.getCache("openid")
         };
         wx.request({
             url: app.buildUrl("/cart/set"),

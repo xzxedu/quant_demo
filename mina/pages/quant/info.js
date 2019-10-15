@@ -73,7 +73,8 @@ Page({
         var that = this;
         var data = {
             "id":this.data.info.id,
-            "number":this.data.buyNumber
+            "number":this.data.buyNumber,
+            "openid": app.getCache("openid")
         };
         wx.request({
             url:app.buildUrl("/cart/set"),
