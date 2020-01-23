@@ -1,14 +1,17 @@
 //app.js
 App({
     onLaunch: function () {
+      wx.cloud.init({
+        traceUser: true,
+        env: "xzxcloud-emrfi",//这个就是环境id
+      })
     },
     globalData: {
         userInfo: null,
         version: "1.0",
         shopName: "quant demo",
-        domain:"http://192.168.1.105:8999/api"
+        domain:"https://xzx.faithforfuture.com/api"
     },
-    // domain:"https://xzx.faithforfuture.com/api"
     tip:function( params ){
         var that = this;
         var title = params.hasOwnProperty('title')?params['title']:'提示信息';

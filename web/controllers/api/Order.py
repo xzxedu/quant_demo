@@ -120,7 +120,6 @@ def orderPay():
     }
 
     pay_info = target_wechat.get_pay_info(pay_data=data)
-
     #保存prepay_id为了后面发模板消息
     pay_order_info.prepay_id = pay_info['prepay_id']
     db.session.add(pay_order_info)

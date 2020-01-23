@@ -1,0 +1,47 @@
+<button bindtap="idCard">识别身份证</button>
+<button bindtap="bankCard">识别银行卡</button>
+
+<view class="{{showView?'view_show':'view_hide'}}">
+  <view class="weui-cells weui-cells_after-title">
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__hd">
+        <view class="weui-label">姓名</view>
+      </view>
+      <view class="weui-cell__bd">
+        <input class="weui-input text-more" value='{{name}}' name="name" />
+      </view>
+    </view>
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__hd">
+        <view class="weui-label">性别</view>
+      </view>
+      <view class="weui-cell__bd">
+        <input class="weui-input text-more" value='{{gender}}' name="gender" />
+      </view>
+    </view>
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__hd">
+        <view class="weui-label">住址</view>
+      </view>
+      <view class="weui-cell__bd">
+        <input class="weui-input text-more" value='{{addr}}' name="addr" />
+      </view>
+    </view>
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__hd">
+        <view class="weui-label text-more">身份证号</view>
+      </view>
+      <view class="weui-cell__bd">
+        <input class="weui-input text-more" value='{{id}}' name="id" />
+      </view>
+    </view>
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__hd">
+        <view class="weui-label text-more">民族</view>
+      </view>
+      <view class="weui-cell__bd">
+        <input class="weui-input text-more" value='{{nationality}}' name="nationality" />
+      </view>
+    </view>
+  </view>
+</view>

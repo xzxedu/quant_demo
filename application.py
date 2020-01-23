@@ -22,7 +22,7 @@ class Application(Flask):
 
 db = SQLAlchemy()
 app = Application(__name__, os.getcwd() + "/web/templates/", root_path=os.getcwd())
-manager = Manager( app )
+manager = Manager(app)
 
 """
 函数模版

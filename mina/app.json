@@ -1,4 +1,5 @@
 {
+  "cloud" : true,
   "pages": [
     "pages/index/index",
     "pages/quant/index",
@@ -9,6 +10,7 @@
     "pages/my/order_info",
     "pages/my/addressList",
     "pages/my/addressSet",
+    "pages/my/Identify",
     "pages/my/commentList",
     "pages/my/index",
     "pages/chatbot/chat"

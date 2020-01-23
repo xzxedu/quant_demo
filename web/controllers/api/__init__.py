@@ -6,6 +6,7 @@ from web.controllers.api.Quant import *
 from web.controllers.api.Order import *
 from web.controllers.api.Cart import *
 from web.controllers.api.My import *
+# from web.controllers.api.ChatBot import *
 
 @route_api.route("/")
 def index():

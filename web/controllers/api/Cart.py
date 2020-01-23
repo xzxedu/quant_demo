@@ -20,7 +20,7 @@ def cartIndex():
         resp['msg'] = "获取失败，未登录"
         return jsonify(resp)
     cart_list = MemberCart.query.filter_by(member_id=member_info.id).all()
-    data_cart_list=[]
+    data_cart_list = []
     if cart_list:
         quant_ids = selectFilterObj(cart_list, "quant_id")
         quant_map = getDictFilterField(Quant, Quant.id, "id", quant_ids)

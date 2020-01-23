@@ -30,8 +30,8 @@ Page({
             commentList: [
                 {
                     "score": "好评",
-                    "date": "2017-10-11 10:20:00",
-                    "content": "非常好吃，一直在他们加购买",
+                    "date": "2019-10-11 10:20:00",
+                    "content": "收益还不错",
                     "user": {
                         "avatar_url": "/images/more/logo.png",
                         "nick": "angellee 🐰 🐒"
@@ -40,7 +40,7 @@ Page({
                 {
                     "score": "好评",
                     "date": "2017-10-11 10:20:00",
-                    "content": "非常好吃，一直在他们加购买",
+                    "content": "非常适合我",
                     "user": {
                         "avatar_url": "/images/more/logo.png",
                         "nick": "angellee 🐰 🐒"
